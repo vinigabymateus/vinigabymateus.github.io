@@ -6,101 +6,112 @@
 <title>Para Você ❤️</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Helvetica', sans-serif;
-    overflow-x: hidden;
-    position: relative;
-    background: linear-gradient(120deg, #ffdde1, #ee9ca7);
-    transition: background 2s;
-  }
+body {
+  margin:0;
+  padding:0;
+  font-family:'Helvetica', sans-serif;
+  overflow-x:hidden;
+  position:relative;
+  background: linear-gradient(120deg, #ffdde1, #ee9ca7);
+  transition: background 3s linear;
+}
 
-  /* Caixa de texto */
-  .message-box {
-    width: 90%;
-    max-width: 600px;
-    margin: 40px auto 20px auto;
-    background: rgba(255,255,255,0.95);
-    border-radius: 2rem;
-    padding: 2rem;
-    box-shadow: 0 5px 30px rgba(0,0,0,0.3);
-    text-align: center;
-    z-index: 10;
-  }
-  .message-box h1 { color: #ff4081; font-weight: bold; font-size: 2rem; margin-bottom: 1rem; }
+/* Caixa de texto */
+.message-box {
+  width:90%;
+  max-width:600px;
+  margin:40px auto 20px auto;
+  background: rgba(255,255,255,0.95);
+  border-radius:2rem;
+  padding:2rem;
+  box-shadow:0 5px 30px rgba(0,0,0,0.3);
+  text-align:center;
+  z-index:10;
+}
+.message-box h1 { color:#ff4081; font-weight:bold; font-size:2rem; margin-bottom:1rem; }
+#typed-text { text-align:left; margin-top:1rem; font-size:1.2rem; line-height:1.6; }
 
-  #typed-text { text-align: left; margin-top: 1rem; font-size: 1.2rem; line-height: 1.6; }
+/* Fotos com parallax */
+.foto {
+  width:90%;
+  max-width:600px;
+  display:block;
+  margin:2rem auto;
+  opacity:0;
+  transform: translateY(20px);
+  transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+  border-radius:20px;
+  box-shadow:0 5px 25px rgba(0,0,0,0.3);
+  position:relative;
+  z-index:1;
+}
+.foto.visible { opacity:1; transform:translateY(0); }
 
-  /* Fotos com parallax */
-  .foto {
-    width: 90%;
-    max-width: 600px;
-    display: block;
-    margin: 2rem auto;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1.5s ease-out, transform 1.5s ease-out;
-    border-radius: 20px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-    position: relative;
-    z-index: 1;
-  }
-  .foto.visible { opacity: 1; transform: translateY(0); }
+/* Botão tocar música */
+.play-button {
+  background:#ff4081;
+  color:white;
+  font-weight:bold;
+  padding:0.75rem 1.5rem;
+  border-radius:9999px;
+  margin-top:1rem;
+  cursor:pointer;
+  transition: background 0.3s;
+}
+.play-button:hover { background:#ff1c63; }
 
-  /* Botão tocar música */
-  .play-button {
-    background: #ff4081;
-    color: white;
-    font-weight: bold;
-    padding: 0.75rem 1.5rem;
-    border-radius: 9999px;
-    margin-top: 1rem;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  .play-button:hover { background: #ff1c63; }
+/* Corações com parallax otimizado */
+.heart {
+  position:absolute;
+  color:rgba(255,0,100,0.7);
+  pointer-events:none;
+  z-index:5;
+  font-size:20px;
+  animation:floatUp linear forwards;
+}
+@keyframes floatUp {
+  0% { transform:translateY(0) rotate(0deg); opacity:1; }
+  100% { transform:translateY(-150vh) rotate(360deg); opacity:0; }
+}
 
-  /* Corações */
-  .heart {
-    position: absolute;
-    color: rgba(255,0,100,0.7);
-    pointer-events: none;
-    z-index: 5;
-    font-size: 20px;
-    animation: floatUp linear forwards;
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
-  }
+/* Texto final */
+#final-text {
+  width:100%;
+  text-align:center;
+  font-size:3rem;
+  font-weight:bold;
+  color:#ff1c63;
+  margin:50px 0;
+  display:none;
+  position:relative;
+  z-index:20;
+}
 
-  /* Texto final */
-  #final-text {
-    width: 100%;
-    text-align: center;
-    font-size: 3rem;
-    font-weight: bold;
-    color: #ff1c63;
-    margin: 50px 0;
-    display: none;
-    position: relative;
-    z-index: 20;
-  }
+/* Fogos otimizado */
+.firework {
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:yellow;
+  animation:explode 1s ease-out forwards;
+  z-index:6;
+}
+@keyframes explode {
+  0% { transform: scale(0) translate(0,0); opacity:1; }
+  100% { transform: scale(1.5) translate(var(--x), var(--y)); opacity:0; }
+}
 
-  /* Fogos simples */
-  .firework {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: yellow;
-    animation: explode 1s ease-out forwards;
-  }
-  @keyframes explode {
-    0% { transform: scale(0) translate(0,0); opacity:1; }
-    100% { transform: scale(1.5) translate(var(--x), var(--y)); opacity:0; }
-  }
+/* Player invisível */
+#youtube-container {
+  position:fixed;
+  bottom:0;
+  right:0;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+}
 </style>
 </head>
 <body>
@@ -115,89 +126,107 @@
 <img src="foto1.jpg" class="foto">
 <img src="foto2.jpg" class="foto">
 <img src="foto3.jpg" class="foto">
-<!-- mais fotos -->
+<!-- adicione mais fotos -->
 
-<!-- Final texto e fogos -->
+<!-- Texto final -->
 <div id="final-text">Eu te amo ❤️🎉</div>
 
-<!-- YouTube oculto -->
-<div id="youtube-audio" style="width:0;height:0;overflow:hidden;"><div id="player"></div></div>
+<!-- YouTube invisível -->
+<div id="youtube-container">
+  <div id="player"></div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
+/* Fundo dinâmico */
+window.addEventListener('scroll',()=>{
+  const scrollY=window.scrollY;
+  const gradient1=Math.min(255,120+scrollY*0.05);
+  const gradient2=Math.min(255,220+scrollY*0.03);
+  document.body.style.background=`linear-gradient(120deg, rgb(255,${gradient1},225), rgb(238,${gradient2},167))`;
+});
+
 /* Fade-in fotos e parallax */
-const fotos = document.querySelectorAll('.foto');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
+const fotos=document.querySelectorAll('.foto');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
     if(entry.isIntersecting){
       entry.target.classList.add('visible');
       observer.unobserve(entry.target);
     }
   });
-},{ threshold:0.2 });
-fotos.forEach(f => observer.observe(f));
+},{threshold:0.2});
+fotos.forEach(f=>observer.observe(f));
 
-window.addEventListener('scroll', () => {
-  fotos.forEach(f => {
+window.addEventListener('scroll',()=>{
+  const scrollY=window.scrollY;
+  fotos.forEach(f=>{
     if(f.classList.contains('visible')){
-      f.style.transform = `translateY(${window.scrollY * 0.05}px)`;
+      f.style.transform=`translateY(${scrollY*0.05}px)`;
     }
+  });
+  document.querySelectorAll('.heart').forEach((h,i)=>{
+    h.style.transform=`translateY(${scrollY*0.02*i}px)`;
+  });
+  document.querySelectorAll('.firework').forEach((f,i)=>{
+    f.style.transform=`translateY(${scrollY*0.03*i}px)`;
   });
 });
 
 /* Texto digitando */
-const frases = [
+const frases=[
   "Você é o melhor presente da minha vida 💖",
   "Eu te amo mais do que palavras podem dizer 🌹",
   "Obrigado por existir e ser minha luz ✨",
   "Cada momento com você é mágico 💕"
 ];
-const typedText = document.getElementById("typed-text");
-let fraseIndex = 0, charIndex = 0;
-
+const typedText=document.getElementById("typed-text");
+let fraseIndex=0,charIndex=0;
 function typeFrase(){
-  if(fraseIndex >= frases.length) return;
-  const frase = frases[fraseIndex];
-  if(charIndex < frase.length){
-    typedText.innerHTML += frase.charAt(charIndex);
+  if(fraseIndex>=frases.length) return;
+  const frase=frases[fraseIndex];
+  if(charIndex<frase.length){
+    typedText.innerHTML+=frase.charAt(charIndex);
     charIndex++;
     setTimeout(typeFrase,100);
   } else {
-    typedText.innerHTML += "<br>";
+    typedText.innerHTML+="<br>";
     fraseIndex++;
     charIndex=0;
     setTimeout(typeFrase,500);
   }
 }
-window.addEventListener('load', typeFrase);
+window.addEventListener('load',typeFrase);
 
-/* Corações */
+/* Corações com parallax otimizado */
 function criarCoracao(){
-  const heart = document.createElement('div');
-  heart.className = 'heart';
+  const heart=document.createElement('div');
+  heart.className='heart';
   heart.innerHTML='❤️';
-  heart.style.left = Math.random()*100+'vw';
+  heart.style.left=Math.random()*100+'vw';
   heart.style.fontSize=Math.random()*30+15+'px';
   heart.style.animationDuration=(Math.random()*5+5)+'s';
-  heart.style.top = Math.random()*document.body.scrollHeight+'px';
+  heart.style.top=Math.random()*document.body.scrollHeight+'px';
   document.body.appendChild(heart);
   setTimeout(()=>heart.remove(),10000);
 }
-setInterval(criarCoracao,300);
+setInterval(criarCoracao,400);
 
-/* Texto final e fogos */
-window.addEventListener('scroll', () => {
-  const bottomReached = window.innerHeight + window.scrollY >= document.body.scrollHeight - 50;
+/* Texto final e fogos com parallax */
+window.addEventListener('scroll',()=>{
+  const bottomReached = window.innerHeight + window.scrollY >= document.body.scrollHeight-50;
   if(bottomReached){
-    const final = document.getElementById('final-text');
-    if(final.style.display==='none') {
+    const final=document.getElementById('final-text');
+    if(final.style.display==='none'){
       final.style.display='block';
       for(let i=0;i<50;i++){
-        const fw = document.createElement('div');
+        const fw=document.createElement('div');
         fw.className='firework';
-        fw.style.setProperty('--x', (Math.random()*200-100)+'px');
-        fw.style.setProperty('--y', (Math.random()*-200)+'px');
-        fw.style.left = (Math.random()*window.innerWidth)+'px';
-        fw.style.top = (window.innerHeight)+'px';
+        fw.style.setProperty('--x',(Math.random()*200-100)+'px');
+        fw.style.setProperty('--y',(Math.random()*-200)+'px');
+        fw.style.left=(Math.random()*window.innerWidth)+'px';
+        fw.style.top=(window.innerHeight)+'px';
         document.body.appendChild(fw);
         setTimeout(()=>fw.remove(),1000);
       }
@@ -205,15 +234,16 @@ window.addEventListener('scroll', () => {
   }
 });
 
-/* YouTube player com fade e início em 34s na segunda repetição */
+/* YouTube player com fade e segunda repetição em 34s */
 let player, repeatCount=0;
 function onYouTubeIframeAPIReady(){
   player=new YT.Player('player',{
-    height:'0', width:'0', videoId:'qDzDHBqh_K8',
+    height:'1', width:'1', videoId:'qDzDHBqh_K8',
     playerVars:{ autoplay:0, controls:0, modestbranding:1 },
     events:{ 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
   });
 }
+
 function fadeVolume(target,duration){
   const current=player.getVolume();
   const stepTime=50;
@@ -227,16 +257,16 @@ function fadeVolume(target,duration){
     if(stepCount>=steps) clearInterval(fade);
   },stepTime);
 }
+
 function onPlayerReady(event){
   document.getElementById('playButton').addEventListener('click',()=>{
     player.setVolume(0);
     player.playVideo();
     fadeVolume(100,2000);
-    event.target.playVideo();
-    event.target.setVolume(100);
     document.getElementById('playButton').style.display='none';
   });
 }
+
 function onPlayerStateChange(event){
   if(event.data===YT.PlayerState.ENDED){
     repeatCount++;
@@ -252,6 +282,5 @@ function onPlayerStateChange(event){
   }
 }
 </script>
-<script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
