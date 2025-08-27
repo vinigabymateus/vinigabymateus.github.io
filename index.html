@@ -7,25 +7,26 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   body {
+    margin: 0;
+    padding: 0;
     background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
-    overflow: hidden;
     font-family: 'Helvetica', sans-serif;
+    overflow: hidden;
   }
 
-  /* Corações voando */
+  /* Coracoes voando */
   .heart {
     position: absolute;
     color: rgba(255, 0, 100, 0.6);
     font-size: 20px;
     animation: floatUp 8s linear infinite;
   }
-
   @keyframes floatUp {
     0% { transform: translateY(100vh) scale(1); opacity: 1; }
     100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
   }
 
-  /* Carrossel moderno com fade */
+  /* Carrossel de fotos */
   .carousel {
     position: relative;
     width: 100%;
@@ -34,6 +35,7 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    z-index: 10;
   }
 
   .carousel img {
@@ -50,82 +52,112 @@
     position: relative;
   }
 
-  /* Mensagem central */
+  /* Mensagens */
   .message-box {
     background: rgba(255,255,255,0.9);
     border-radius: 2rem;
     padding: 2rem;
     max-width: 500px;
     box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    text-align: center;
     z-index: 10;
     position: relative;
+    margin-top: 1rem;
   }
 
-  .message-box h1 {
-    color: #ff4081;
-  }
+  .message-box h1 { color: #ff4081; font-weight: bold; font-size: 2rem; margin-bottom: 1rem; }
+
+  .message-box p { color: #333; font-size: 1.1rem; }
 </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen text-center p-4 relative">
+<body>
 
-  <!-- Música -->
-  <audio id="musica" autoplay loop>
-    <source src="musica.mp3" type="audio/mpeg">
-    Seu navegador não suporta áudio.
-  </audio>
+<!-- Música -->
+<audio id="musica" autoplay loop>
+  <source src="musica.mp3" type="audio/mpeg">
+  Seu navegador não suporta áudio.
+</audio>
 
-  <!-- Mensagem central -->
-  <div class="message-box">
-    <h1 class="text-3xl font-bold mb-4">Oi, meu amor ❤️</h1>
-    <p class="text-lg mb-4">Quero te lembrar o quanto você é especial para mim. 💖</p>
-    <p class="text-pink-600">Essa página foi feita só para você ✨</p>
-  </div>
+<!-- Mensagem central -->
+<div class="message-box">
+  <h1>Oi, meu amor ❤️</h1>
+  <p id="mensagem">Quero te lembrar o quanto você é especial para mim.</p>
+</div>
 
-  <!-- Carrossel de fotos -->
-  <div class="carousel z-10">
-    <img src="foto1.jpg" class="active">
-    <img src="foto2.jpg">
-    <img src="foto3.jpg">
-    <!-- adicione mais fotos se quiser -->
-  </div>
+<!-- Carrossel de fotos -->
+<div class="carousel">
+  <img src="foto1.jpg" class="active">
+  <img src="foto2.jpg">
+  <img src="foto3.jpg">
+  <!-- adicione mais fotos -->
+</div>
 
-  <!-- Script corações -->
-  <script>
-    function criarCoracao() {
-      const heart = document.createElement("div");
-      heart.classList.add("heart");
-      heart.innerHTML = "❤️";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = Math.random() * 20 + 15 + "px";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 8000);
-    }
-    setInterval(criarCoracao, 400);
-  </script>
+<!-- Script coracoes -->
+<script>
+  function criarCoracao() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 25 + 15 + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 8000);
+  }
+  setInterval(criarCoracao, 400);
 
-  <!-- Script carrossel com fade -->
-  <script>
-    const imagens = document.querySelectorAll(".carousel img");
-    let index = 0;
+  // Coracoes seguindo o cursor
+  document.addEventListener("mousemove", e => {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = e.clientX + "px";
+    heart.style.top = e.clientY + "px";
+    heart.style.fontSize = Math.random() * 20 + 10 + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 3000);
+  });
+</script>
 
-    function mostrarProximaImagem() {
-      imagens[index].classList.remove("active");
-      index = (index + 1) % imagens.length;
-      imagens[index].classList.add("active");
-    }
+<!-- Script carrossel com fade -->
+<script>
+  const imagens = document.querySelectorAll(".carousel img");
+  let index = 0;
+  setInterval(() => {
+    imagens[index].classList.remove("active");
+    index = (index + 1) % imagens.length;
+    imagens[index].classList.add("active");
+  }, 3500);
+</script>
 
-    setInterval(mostrarProximaImagem, 3500); // troca a cada 3,5s
-  </script>
+<!-- Script mensagens dinamicas -->
+<script>
+  const frases = [
+    "Você é o melhor presente da minha vida 💖",
+    "Eu te amo mais do que palavras podem dizer 🌹",
+    "Obrigado por existir e ser minha luz ✨",
+    "Cada momento com você é mágico 💕"
+  ];
+  let msgIndex = 0;
+  setInterval(() => {
+    const mensagem = document.getElementById("mensagem");
+    mensagem.style.opacity = 0;
+    setTimeout(() => {
+      mensagem.textContent = frases[msgIndex];
+      mensagem.style.opacity = 1;
+      msgIndex = (msgIndex + 1) % frases.length;
+    }, 500);
+  }, 5000);
+</script>
 
-  <!-- Script autoplay reforçado -->
-  <script>
-    window.addEventListener('load', () => {
-      const musica = document.getElementById('musica');
-      musica.play().catch(() => {
-        console.log('Autoplay bloqueado pelo navegador. Interaja na página para iniciar a música.');
-      });
+<!-- Script autoplay reforçado -->
+<script>
+  window.addEventListener('load', () => {
+    const musica = document.getElementById('musica');
+    musica.play().catch(() => {
+      console.log('Autoplay bloqueado. Interaja na página para iniciar a música.');
     });
-  </script>
+  });
+</script>
 
 </body>
 </html>
