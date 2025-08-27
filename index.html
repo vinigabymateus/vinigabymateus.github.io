@@ -15,10 +15,8 @@
     position: relative;
   }
 
-  /* Texto fixo */
+  /* Texto normal, rolagem */
   .message-box {
-    position: sticky;
-    top: 20px;
     width: 90%;
     max-width: 600px;
     margin: 20px auto;
@@ -83,7 +81,7 @@
 </head>
 <body>
 
-<!-- Texto fixo -->
+<!-- Texto -->
 <div class="message-box">
   <h1>Oi, meu amor ❤️</h1>
   <div id="typed-text"></div>
@@ -117,7 +115,7 @@ window.addEventListener('scroll', checkFotos);
 window.addEventListener('load', checkFotos);
 </script>
 
-<!-- Script digitando múltiplas frases -->
+<!-- Script digitando frases somente uma vez -->
 <script>
 const frases = [
   "Você é o melhor presente da minha vida 💖",
@@ -125,24 +123,27 @@ const frases = [
   "Obrigado por existir e ser minha luz ✨",
   "Cada momento com você é mágico 💕"
 ];
-let typedIndex = 0, charIndex = 0;
 const typedText = document.getElementById("typed-text");
 
-function type() {
-  if(typedIndex >= frases.length) typedIndex = 0;
-  const frase = frases[typedIndex];
+let fraseIndex = 0;
+let charIndex = 0;
+
+function typeFrase() {
+  if(fraseIndex >= frases.length) return; // parar após todas aparecerem
+
+  const frase = frases[fraseIndex];
   if(charIndex < frase.length){
     typedText.innerHTML += frase.charAt(charIndex);
     charIndex++;
-    setTimeout(type, 100);
+    setTimeout(typeFrase, 100);
   } else {
     typedText.innerHTML += "<br>"; // nova linha
+    fraseIndex++;
     charIndex = 0;
-    typedIndex++;
-    setTimeout(type, 1000);
+    setTimeout(typeFrase, 500); // pequena pausa antes da próxima frase
   }
 }
-window.addEventListener('load', type);
+window.addEventListener('load', typeFrase);
 </script>
 
 <!-- Script chuva de corações em toda a página -->
@@ -154,11 +155,8 @@ function criarCoracao() {
   heart.style.left = Math.random() * 100 + "vw";
   heart.style.fontSize = Math.random() * 30 + 15 + "px";
   heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
-
-  // posição inicial Y aleatória ao longo de toda a página
   const pageHeight = document.body.scrollHeight;
   heart.style.top = Math.random() * pageHeight + "px";
-
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 10000);
 }
