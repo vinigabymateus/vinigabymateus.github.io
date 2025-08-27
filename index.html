@@ -12,6 +12,7 @@
     font-family: 'Helvetica', sans-serif;
     background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
     overflow-x: hidden;
+    position: relative;
   }
 
   /* Mensagem com efeito digitando */
@@ -60,30 +61,23 @@
   }
   .play-button:hover { background: #ff1c63; }
 
-  /* Chuva de corações centralizada */
+  /* Corações - tela inteira */
   .heart {
     position: absolute;
     color: rgba(255,0,100,0.7);
-    font-size: 25px;
-    animation: floatUp 5s linear forwards;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 5;
     pointer-events: none;
+    z-index: 5;
+    font-size: 20px;
+    animation: floatUp linear forwards;
   }
 
   @keyframes floatUp {
-    0% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateX(-50%) translateY(-150px) scale(1.5); opacity: 0; }
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
   }
 </style>
 </head>
 <body>
-
-<!-- Música -->
-<audio id="musica" loop preload="auto">
-  <source src="musica.wav" type="audio/wav">
-</audio>
 
 <!-- Mensagem com efeito digitando -->
 <div class="message-box">
@@ -98,7 +92,12 @@
 <img src="foto3.jpg" class="foto">
 <!-- adicione mais fotos -->
 
-<!-- Script fade-in das fotos ao rolar -->
+<!-- YouTube oculto para áudio -->
+<div id="youtube-audio" style="width:0;height:0;overflow:hidden;">
+  <div id="player"></div>
+</div>
+
+<!-- Script fade-in fotos -->
 <script>
 const fotos = document.querySelectorAll('.foto');
 function checkFotos() {
@@ -114,7 +113,7 @@ window.addEventListener('scroll', checkFotos);
 window.addEventListener('load', checkFotos);
 </script>
 
-<!-- Script efeito digitando -->
+<!-- Script digitando -->
 <script>
 const frases = [
   "Você é o melhor presente da minha vida 💖",
@@ -122,8 +121,7 @@ const frases = [
   "Obrigado por existir e ser minha luz ✨",
   "Cada momento com você é mágico 💕"
 ];
-let typedIndex = 0;
-let charIndex = 0;
+let typedIndex = 0, charIndex = 0;
 const typedText = document.getElementById("typed-text");
 
 function type() {
@@ -145,31 +143,50 @@ function type() {
 window.addEventListener('load', type);
 </script>
 
-<!-- Script botão iniciar música -->
-<script>
-const playButton = document.getElementById('playButton');
-const musica = document.getElementById('musica');
-playButton.addEventListener('click', async () => {
-  try {
-    await musica.play();
-    playButton.style.display = 'none';
-  } catch(e){
-    console.log("Erro ao tocar música:", e);
-  }
-});
-</script>
-
-<!-- Script chuva de corações centralizada -->
+<!-- Script chuva de corações -->
 <script>
 function criarCoracao() {
   const heart = document.createElement('div');
   heart.classList.add('heart');
   heart.innerHTML = "❤️";
-  heart.style.fontSize = Math.random() * 20 + 20 + "px";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = Math.random() * 30 + 15 + "px";
+  heart.style.animationDuration = (Math.random()*5 + 3) + "s";
   document.body.appendChild(heart);
-  setTimeout(()=>heart.remove(), 5000);
+  setTimeout(()=>heart.remove(), 8000);
 }
-setInterval(criarCoracao, 400);
+setInterval(criarCoracao, 300);
+</script>
+
+<!-- Script botão tocar música YouTube -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+let player;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    height: '0',
+    width: '0',
+    videoId: 'qDzDHBqh_K8',
+    playerVars: { 
+      autoplay: 0, 
+      controls: 0, 
+      loop: 1, 
+      playlist: 'qDzDHBqh_K8', 
+      modestbranding: 1
+    },
+    events: {
+      'onReady': onPlayerReady
+    }
+  });
+}
+
+function onPlayerReady(event) {
+  const playButton = document.getElementById('playButton');
+  playButton.addEventListener('click', () => {
+    event.target.playVideo();
+    playButton.style.display = 'none';
+  });
+}
 </script>
 
 </body>
