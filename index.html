@@ -12,41 +12,57 @@
     background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
     font-family: 'Helvetica', sans-serif;
     overflow: hidden;
+    position: relative;
   }
 
-  /* Coracoes voando */
+  /* Corações voando */
   .heart {
     position: absolute;
-    color: rgba(255, 0, 100, 0.6);
+    color: rgba(255,0,100,0.7);
     font-size: 20px;
     animation: floatUp 8s linear infinite;
+    pointer-events: none;
   }
   @keyframes floatUp {
     0% { transform: translateY(100vh) scale(1); opacity: 1; }
     100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
   }
 
+  /* Corações fixos no fundo */
+  .fixed-heart {
+    position: absolute;
+    color: rgba(255,0,100,0.1);
+    font-size: 50px;
+    top: 0;
+    left: 0;
+    animation: sway 6s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes sway {
+    0% { transform: translateY(0) rotate(0deg);}
+    50% { transform: translateY(10px) rotate(10deg);}
+    100% { transform: translateY(0) rotate(0deg);}
+  }
+
   /* Carrossel de fotos */
   .carousel {
     position: relative;
-    width: 100%;
+    width: 90%;
     max-width: 400px;
     margin: 2rem auto;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    box-shadow: 0 0 25px rgba(0,0,0,0.3);
     z-index: 10;
   }
-
   .carousel img {
     width: 100%;
     position: absolute;
     top: 0; left: 0;
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 1.5s ease-in-out;
     border-radius: 20px;
   }
-
   .carousel img.active {
     opacity: 1;
     position: relative;
@@ -54,29 +70,42 @@
 
   /* Mensagens */
   .message-box {
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.95);
     border-radius: 2rem;
     padding: 2rem;
     max-width: 500px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 30px rgba(0,0,0,0.3);
     text-align: center;
     z-index: 10;
     position: relative;
     margin-top: 1rem;
+    transition: all 0.5s ease;
   }
 
   .message-box h1 { color: #ff4081; font-weight: bold; font-size: 2rem; margin-bottom: 1rem; }
-
-  .message-box p { color: #333; font-size: 1.1rem; }
+  .message-box p { color: #333; font-size: 1.1rem; opacity: 1; transition: opacity 0.5s ease-in-out; }
 </style>
 </head>
 <body>
 
 <!-- Música -->
-<audio id="musica" autoplay loop>
+<audio id="musica" loop>
   <source src="musica.mp3" type="audio/mpeg">
   Seu navegador não suporta áudio.
 </audio>
+
+<!-- Corações fixos no fundo -->
+<script>
+  for(let i=0;i<20;i++){
+    const fh = document.createElement("div");
+    fh.classList.add("fixed-heart");
+    fh.innerHTML="❤️";
+    fh.style.top=Math.random()*100+"vh";
+    fh.style.left=Math.random()*100+"vw";
+    fh.style.fontSize=(Math.random()*40+30)+"px";
+    document.body.appendChild(fh);
+  }
+</script>
 
 <!-- Mensagem central -->
 <div class="message-box">
@@ -92,7 +121,7 @@
   <!-- adicione mais fotos -->
 </div>
 
-<!-- Script coracoes -->
+<!-- Script corações -->
 <script>
   function criarCoracao() {
     const heart = document.createElement("div");
@@ -101,30 +130,29 @@
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.fontSize = Math.random() * 25 + 15 + "px";
     document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 8000);
+    setTimeout(()=>heart.remove(),8000);
   }
-  setInterval(criarCoracao, 400);
+  setInterval(criarCoracao, 300);
 
-  // Coracoes seguindo o cursor
   document.addEventListener("mousemove", e => {
     const heart = document.createElement("div");
     heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = e.clientX + "px";
-    heart.style.top = e.clientY + "px";
-    heart.style.fontSize = Math.random() * 20 + 10 + "px";
+    heart.innerHTML="❤️";
+    heart.style.left=e.clientX+"px";
+    heart.style.top=e.clientY+"px";
+    heart.style.fontSize=Math.random()*20+10+"px";
     document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 3000);
+    setTimeout(()=>heart.remove(),3000);
   });
 </script>
 
-<!-- Script carrossel com fade -->
+<!-- Script carrossel -->
 <script>
   const imagens = document.querySelectorAll(".carousel img");
   let index = 0;
   setInterval(() => {
     imagens[index].classList.remove("active");
-    index = (index + 1) % imagens.length;
+    index = (index+1) % imagens.length;
     imagens[index].classList.add("active");
   }, 3500);
 </script>
@@ -137,25 +165,30 @@
     "Obrigado por existir e ser minha luz ✨",
     "Cada momento com você é mágico 💕"
   ];
-  let msgIndex = 0;
-  setInterval(() => {
-    const mensagem = document.getElementById("mensagem");
-    mensagem.style.opacity = 0;
-    setTimeout(() => {
-      mensagem.textContent = frases[msgIndex];
-      mensagem.style.opacity = 1;
-      msgIndex = (msgIndex + 1) % frases.length;
-    }, 500);
-  }, 5000);
+  let msgIndex=0;
+  setInterval(()=>{
+    const mensagem=document.getElementById("mensagem");
+    mensagem.style.opacity=0;
+    setTimeout(()=>{
+      mensagem.textContent=frases[msgIndex];
+      mensagem.style.opacity=1;
+      msgIndex=(msgIndex+1)%frases.length;
+    },500);
+  },5000);
 </script>
 
 <!-- Script autoplay reforçado -->
 <script>
-  window.addEventListener('load', () => {
-    const musica = document.getElementById('musica');
-    musica.play().catch(() => {
-      console.log('Autoplay bloqueado. Interaja na página para iniciar a música.');
-    });
+  window.addEventListener('load', ()=>{
+    const musica=document.getElementById('musica');
+    const playPromise = musica.play();
+    if(playPromise !== undefined){
+      playPromise.then(_=>{
+        console.log("Musica tocando");
+      }).catch(error=>{
+        console.log("Autoplay bloqueado, interaja na página");
+      });
+    }
   });
 </script>
 
