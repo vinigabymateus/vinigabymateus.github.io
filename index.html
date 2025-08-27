@@ -15,11 +15,11 @@
     position: relative;
   }
 
-  /* Texto normal, rolagem */
+  /* Caixa de texto no início da página */
   .message-box {
     width: 90%;
     max-width: 600px;
-    margin: 20px auto;
+    margin: 40px auto 20px auto;
     background: rgba(255,255,255,0.95);
     border-radius: 2rem;
     padding: 2rem;
@@ -81,7 +81,7 @@
 </head>
 <body>
 
-<!-- Texto -->
+<!-- Caixa de texto -->
 <div class="message-box">
   <h1>Oi, meu amor ❤️</h1>
   <div id="typed-text"></div>
@@ -92,14 +92,14 @@
 <img src="foto1.jpg" class="foto">
 <img src="foto2.jpg" class="foto">
 <img src="foto3.jpg" class="foto">
-<!-- adicione mais fotos -->
+<!-- adicione mais fotos conforme necessário -->
 
 <!-- YouTube oculto para áudio -->
 <div id="youtube-audio" style="width:0;height:0;overflow:hidden;">
   <div id="player"></div>
 </div>
 
-<!-- Script fade-in fotos com IntersectionObserver -->
+<!-- Script fade-in fotos usando IntersectionObserver -->
 <script>
 const fotos = document.querySelectorAll('.foto');
 
@@ -107,17 +107,15 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if(entry.isIntersecting){
       entry.target.classList.add('visible');
-      observer.unobserve(entry.target); // observa apenas uma vez
+      observer.unobserve(entry.target);
     }
   });
-}, {
-  threshold: 0.2 // 20% da foto visível dispara o fade
-});
+}, { threshold: 0.2 });
 
 fotos.forEach(foto => observer.observe(foto));
 </script>
 
-<!-- Script digitando frases somente uma vez -->
+<!-- Script digitando frases apenas uma vez -->
 <script>
 const frases = [
   "Você é o melhor presente da minha vida 💖",
@@ -131,7 +129,7 @@ let fraseIndex = 0;
 let charIndex = 0;
 
 function typeFrase() {
-  if(fraseIndex >= frases.length) return; // parar após todas aparecerem
+  if(fraseIndex >= frases.length) return;
 
   const frase = frases[fraseIndex];
   if(charIndex < frase.length){
@@ -139,16 +137,16 @@ function typeFrase() {
     charIndex++;
     setTimeout(typeFrase, 100);
   } else {
-    typedText.innerHTML += "<br>"; // nova linha
+    typedText.innerHTML += "<br>";
     fraseIndex++;
     charIndex = 0;
-    setTimeout(typeFrase, 500); // pequena pausa antes da próxima frase
+    setTimeout(typeFrase, 500);
   }
 }
 window.addEventListener('load', typeFrase);
 </script>
 
-<!-- Script chuva de corações em toda a página -->
+<!-- Script chuva de corações -->
 <script>
 function criarCoracao() {
   const heart = document.createElement('div');
@@ -165,34 +163,59 @@ function criarCoracao() {
 setInterval(criarCoracao, 300);
 </script>
 
-<!-- Script botão tocar música YouTube -->
+<!-- Script YouTube com fade e início em 34s na segunda repetição -->
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
 let player;
+let repeatCount = 0;
+
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
     height: '0',
     width: '0',
     videoId: 'qDzDHBqh_K8',
-    playerVars: { 
-      autoplay: 0, 
-      controls: 0, 
-      loop: 1, 
-      playlist: 'qDzDHBqh_K8', 
-      modestbranding: 1
-    },
-    events: {
-      'onReady': onPlayerReady
-    }
+    playerVars: { autoplay: 0, controls: 0, modestbranding: 1 },
+    events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
   });
+}
+
+function fadeVolume(targetVolume, duration) {
+  const currentVolume = player.getVolume();
+  const stepTime = 50;
+  const steps = duration / stepTime;
+  const volumeStep = (targetVolume - currentVolume) / steps;
+  let stepCount = 0;
+  const fade = setInterval(() => {
+    stepCount++;
+    const newVol = currentVolume + volumeStep * stepCount;
+    player.setVolume(Math.min(Math.max(newVol, 0), 100));
+    if(stepCount >= steps) clearInterval(fade);
+  }, stepTime);
 }
 
 function onPlayerReady(event) {
   const playButton = document.getElementById('playButton');
   playButton.addEventListener('click', () => {
-    event.target.playVideo();
+    player.setVolume(0);
+    player.playVideo();
+    fadeVolume(100, 2000);
     playButton.style.display = 'none';
   });
+}
+
+function onPlayerStateChange(event) {
+  if(event.data === YT.PlayerState.ENDED){
+    repeatCount++;
+    if(repeatCount === 1){
+      player.seekTo(0);
+      player.playVideo();
+    } else {
+      player.setVolume(0);
+      player.seekTo(34, true);
+      player.playVideo();
+      fadeVolume(100, 2000);
+    }
+  }
 }
 </script>
 
