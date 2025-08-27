@@ -99,20 +99,22 @@
   <div id="player"></div>
 </div>
 
-<!-- Script fade-in fotos -->
+<!-- Script fade-in fotos com IntersectionObserver -->
 <script>
 const fotos = document.querySelectorAll('.foto');
-function checkFotos() {
-  const triggerBottom = window.innerHeight * 0.85;
-  fotos.forEach(foto => {
-    const fotoTop = foto.getBoundingClientRect().top;
-    if(fotoTop < triggerBottom){
-      foto.classList.add('visible');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target); // observa apenas uma vez
     }
   });
-}
-window.addEventListener('scroll', checkFotos);
-window.addEventListener('load', checkFotos);
+}, {
+  threshold: 0.2 // 20% da foto visível dispara o fade
+});
+
+fotos.forEach(foto => observer.observe(foto));
 </script>
 
 <!-- Script digitando frases somente uma vez -->
