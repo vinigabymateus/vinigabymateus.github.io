@@ -14,28 +14,6 @@
     overflow-x: hidden;
   }
 
-  /* Corações voando */
-  .heart {
-    position: absolute;
-    color: rgba(255,0,100,0.7);
-    font-size: 20px;
-    animation: floatUp 8s linear infinite;
-    pointer-events: none;
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(100vh) scale(1); opacity: 1; }
-    100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
-  }
-
-  /* Corações seguindo cursor */
-  .cursor-heart {
-    position: absolute;
-    color: rgba(255,0,100,0.7);
-    font-size: 20px;
-    pointer-events: none;
-    animation: floatUp 4s linear forwards;
-  }
-
   /* Mensagem com efeito digitando */
   .message-box {
     background: rgba(255,255,255,0.95);
@@ -48,7 +26,6 @@
     position: relative;
     z-index: 10;
   }
-
   .message-box h1 { color: #ff4081; font-weight: bold; font-size: 2rem; margin-bottom: 1rem; }
 
   /* Fade-in das fotos */
@@ -62,6 +39,8 @@
     transition: opacity 1.5s ease-out, transform 1.5s ease-out;
     border-radius: 20px;
     box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
   }
   .foto.visible {
     opacity: 1;
@@ -81,14 +60,29 @@
   }
   .play-button:hover { background: #ff1c63; }
 
+  /* Chuva de corações centralizada */
+  .heart {
+    position: absolute;
+    color: rgba(255,0,100,0.7);
+    font-size: 25px;
+    animation: floatUp 5s linear forwards;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(-150px) scale(1.5); opacity: 0; }
+  }
 </style>
 </head>
 <body>
 
 <!-- Música -->
-<audio id="musica" loop>
+<audio id="musica" loop preload="auto">
   <source src="musica.wav" type="audio/wav">
-  Seu navegador não suporta áudio.
 </audio>
 
 <!-- Mensagem com efeito digitando -->
@@ -103,32 +97,6 @@
 <img src="foto2.jpg" class="foto">
 <img src="foto3.jpg" class="foto">
 <!-- adicione mais fotos -->
-
-<!-- Script corações voando -->
-<script>
-function criarCoracao() {
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML = "❤️";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = Math.random()*25 + 15 + "px";
-  document.body.appendChild(heart);
-  setTimeout(()=>heart.remove(),8000);
-}
-setInterval(criarCoracao, 400);
-
-// Corações seguindo o cursor
-document.addEventListener("mousemove", e => {
-  const c = document.createElement("div");
-  c.classList.add("cursor-heart");
-  c.innerHTML="❤️";
-  c.style.left=e.clientX+"px";
-  c.style.top=e.clientY+"px";
-  c.style.fontSize=Math.random()*20+10+"px";
-  document.body.appendChild(c);
-  setTimeout(()=>c.remove(),4000);
-});
-</script>
 
 <!-- Script fade-in das fotos ao rolar -->
 <script>
@@ -177,14 +145,31 @@ function type() {
 window.addEventListener('load', type);
 </script>
 
-<!-- Botão iniciar música -->
+<!-- Script botão iniciar música -->
 <script>
 const playButton = document.getElementById('playButton');
 const musica = document.getElementById('musica');
-playButton.addEventListener('click', () => {
-  musica.play();
-  playButton.style.display = 'none';
+playButton.addEventListener('click', async () => {
+  try {
+    await musica.play();
+    playButton.style.display = 'none';
+  } catch(e){
+    console.log("Erro ao tocar música:", e);
+  }
 });
+</script>
+
+<!-- Script chuva de corações centralizada -->
+<script>
+function criarCoracao() {
+  const heart = document.createElement('div');
+  heart.classList.add('heart');
+  heart.innerHTML = "❤️";
+  heart.style.fontSize = Math.random() * 20 + 20 + "px";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(), 5000);
+}
+setInterval(criarCoracao, 400);
 </script>
 
 </body>
