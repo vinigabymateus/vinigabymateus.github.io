@@ -149,14 +149,29 @@ function criarCoracao() {
   const heart = document.createElement('div');
   heart.classList.add('heart');
   heart.innerHTML = "❤️";
+
+  // posição horizontal aleatória
   heart.style.left = Math.random() * 100 + "vw";
+
+  // tamanho aleatório
   heart.style.fontSize = Math.random() * 30 + 15 + "px";
-  heart.style.animationDuration = (Math.random()*5 + 3) + "s";
+
+  // duração aleatória do movimento
+  heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
+
+  // posição inicial Y aleatória, em toda a altura da página
+  const pageHeight = document.body.scrollHeight;
+  heart.style.top = Math.random() * pageHeight + "px";
+
   document.body.appendChild(heart);
-  setTimeout(()=>heart.remove(), 8000);
+
+  setTimeout(() => heart.remove(), 10000); // remove após animar
 }
+
+// cria corações a cada 300ms
 setInterval(criarCoracao, 300);
 </script>
+
 
 <!-- Script botão tocar música YouTube -->
 <script src="https://www.youtube.com/iframe_api"></script>
