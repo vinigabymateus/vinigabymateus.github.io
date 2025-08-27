@@ -50,46 +50,46 @@
     position: relative;
   }
 
-  /* Botão iniciar música (compatível com celulares) */
-  .start-button {
-    background: #ff4081;
-    color: white;
-    font-weight: bold;
-    padding: 0.75rem 1.5rem;
-    border-radius: 9999px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    transition: background 0.3s;
+  /* Mensagem central */
+  .message-box {
+    background: rgba(255,255,255,0.9);
+    border-radius: 2rem;
+    padding: 2rem;
+    max-width: 500px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    z-index: 10;
+    position: relative;
   }
 
-  .start-button:hover {
-    background: #ff1c63;
+  .message-box h1 {
+    color: #ff4081;
   }
 </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen text-center p-4 relative">
 
-  <!-- Mensagem -->
-  <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-lg w-full z-10 relative">
-    <h1 class="text-3xl font-bold text-pink-600 mb-4">Oi, meu amor ❤️</h1>
-    <p class="text-lg text-gray-700">Quero te lembrar o quanto você é especial para mim.</p>
-    <button id="startButton" class="start-button mt-6">Clique aqui para começar 💌</button>
-  </div>
-
-  <!-- Carrossel de Fotos -->
-  <div class="carousel z-10">
-    <img src="foto1.jpg" class="active">
-    <img src="foto2.jpg">
-    <img src="foto3.jpg">
-    <!-- adicione mais fotos -->
-  </div>
-
   <!-- Música -->
-  <audio id="musica" loop>
+  <audio id="musica" autoplay loop>
     <source src="musica.mp3" type="audio/mpeg">
     Seu navegador não suporta áudio.
   </audio>
 
-  <!-- Script dos corações -->
+  <!-- Mensagem central -->
+  <div class="message-box">
+    <h1 class="text-3xl font-bold mb-4">Oi, meu amor ❤️</h1>
+    <p class="text-lg mb-4">Quero te lembrar o quanto você é especial para mim. 💖</p>
+    <p class="text-pink-600">Essa página foi feita só para você ✨</p>
+  </div>
+
+  <!-- Carrossel de fotos -->
+  <div class="carousel z-10">
+    <img src="foto1.jpg" class="active">
+    <img src="foto2.jpg">
+    <img src="foto3.jpg">
+    <!-- adicione mais fotos se quiser -->
+  </div>
+
+  <!-- Script corações -->
   <script>
     function criarCoracao() {
       const heart = document.createElement("div");
@@ -100,10 +100,10 @@
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 8000);
     }
-    setInterval(criarCoracao, 400); // mais corações
+    setInterval(criarCoracao, 400);
   </script>
 
-  <!-- Script do carrossel com fade -->
+  <!-- Script carrossel com fade -->
   <script>
     const imagens = document.querySelectorAll(".carousel img");
     let index = 0;
@@ -117,14 +117,13 @@
     setInterval(mostrarProximaImagem, 3500); // troca a cada 3,5s
   </script>
 
-  <!-- Script para iniciar música no celular -->
+  <!-- Script autoplay reforçado -->
   <script>
-    const startButton = document.getElementById('startButton');
-    const musica = document.getElementById('musica');
-
-    startButton.addEventListener('click', () => {
-      musica.play();
-      startButton.style.display = 'none';
+    window.addEventListener('load', () => {
+      const musica = document.getElementById('musica');
+      musica.play().catch(() => {
+        console.log('Autoplay bloqueado pelo navegador. Interaja na página para iniciar a música.');
+      });
     });
   </script>
 
