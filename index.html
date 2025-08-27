@@ -1,63 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Para Você ❤️</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Você ❤️</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
+    overflow: hidden;
+    font-family: 'Helvetica', sans-serif;
+  }
 
-    /* Corações voando */
-    .heart {
-      position: absolute;
-      color: rgba(255, 0, 100, 0.6);
-      font-size: 20px;
-      animation: floatUp 8s linear infinite;
-    }
+  /* Corações voando */
+  .heart {
+    position: absolute;
+    color: rgba(255, 0, 100, 0.6);
+    font-size: 20px;
+    animation: floatUp 8s linear infinite;
+  }
 
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(1); opacity: 1; }
-      100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
-    }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(1); opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+  }
 
-    /* Carrossel */
-    .carousel {
-      position: relative;
-      width: 100%;
-      max-width: 400px;
-      margin: auto;
-      overflow: hidden;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
+  /* Carrossel moderno com fade */
+  .carousel {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  }
 
-    .carousel img {
-      width: 100%;
-      display: none;
-      border-radius: 20px;
-    }
+  .carousel img {
+    width: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    border-radius: 20px;
+  }
 
-    .carousel img.active {
-      display: block;
-    }
-  </style>
+  .carousel img.active {
+    opacity: 1;
+    position: relative;
+  }
+
+  /* Botão iniciar música (compatível com celulares) */
+  .start-button {
+    background: #ff4081;
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: background 0.3s;
+  }
+
+  .start-button:hover {
+    background: #ff1c63;
+  }
+</style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen text-center p-4 relative">
 
-  <!-- Música -->
-  <audio id="musica" autoplay loop>
-    <source src="musica.mp3" type="audio/mpeg">
-    Seu navegador não suporta áudio.
-  </audio>
-
   <!-- Mensagem -->
-  <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-lg w-full mb-6 relative z-10">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-lg w-full z-10 relative">
     <h1 class="text-3xl font-bold text-pink-600 mb-4">Oi, meu amor ❤️</h1>
     <p class="text-lg text-gray-700">Quero te lembrar o quanto você é especial para mim.</p>
+    <button id="startButton" class="start-button mt-6">Clique aqui para começar 💌</button>
   </div>
 
   <!-- Carrossel de Fotos -->
@@ -65,8 +80,14 @@
     <img src="foto1.jpg" class="active">
     <img src="foto2.jpg">
     <img src="foto3.jpg">
-    <!-- adicione mais fotos no mesmo formato -->
+    <!-- adicione mais fotos -->
   </div>
+
+  <!-- Música -->
+  <audio id="musica" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+    Seu navegador não suporta áudio.
+  </audio>
 
   <!-- Script dos corações -->
   <script>
@@ -77,18 +98,15 @@
       heart.style.left = Math.random() * 100 + "vw";
       heart.style.fontSize = Math.random() * 20 + 15 + "px";
       document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 8000);
+      setTimeout(() => heart.remove(), 8000);
     }
-    setInterval(criarCoracao, 500);
+    setInterval(criarCoracao, 400); // mais corações
   </script>
 
-  <!-- Script do carrossel -->
+  <!-- Script do carrossel com fade -->
   <script>
-    let index = 0;
     const imagens = document.querySelectorAll(".carousel img");
+    let index = 0;
 
     function mostrarProximaImagem() {
       imagens[index].classList.remove("active");
@@ -96,7 +114,18 @@
       imagens[index].classList.add("active");
     }
 
-    setInterval(mostrarProximaImagem, 3000); // troca a cada 3 segundos
+    setInterval(mostrarProximaImagem, 3500); // troca a cada 3,5s
+  </script>
+
+  <!-- Script para iniciar música no celular -->
+  <script>
+    const startButton = document.getElementById('startButton');
+    const musica = document.getElementById('musica');
+
+    startButton.addEventListener('click', () => {
+      musica.play();
+      startButton.style.display = 'none';
+    });
   </script>
 
 </body>
