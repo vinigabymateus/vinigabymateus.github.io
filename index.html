@@ -15,19 +15,23 @@
     position: relative;
   }
 
-  /* Mensagem com efeito digitando */
+  /* Texto fixo */
   .message-box {
+    position: sticky;
+    top: 20px;
+    width: 90%;
+    max-width: 600px;
+    margin: 20px auto;
     background: rgba(255,255,255,0.95);
     border-radius: 2rem;
     padding: 2rem;
-    max-width: 600px;
-    margin: 2rem auto;
     box-shadow: 0 5px 30px rgba(0,0,0,0.3);
     text-align: center;
-    position: relative;
     z-index: 10;
   }
   .message-box h1 { color: #ff4081; font-weight: bold; font-size: 2rem; margin-bottom: 1rem; }
+
+  #typed-text { text-align: left; margin-top: 1rem; }
 
   /* Fade-in das fotos */
   .foto {
@@ -79,10 +83,10 @@
 </head>
 <body>
 
-<!-- Mensagem com efeito digitando -->
+<!-- Texto fixo -->
 <div class="message-box">
   <h1>Oi, meu amor ❤️</h1>
-  <p id="typed-text"></p>
+  <div id="typed-text"></div>
   <button id="playButton" class="play-button">Clique aqui para ouvir a música 🎵</button>
 </div>
 
@@ -113,7 +117,7 @@ window.addEventListener('scroll', checkFotos);
 window.addEventListener('load', checkFotos);
 </script>
 
-<!-- Script digitando -->
+<!-- Script digitando múltiplas frases -->
 <script>
 const frases = [
   "Você é o melhor presente da minha vida 💖",
@@ -128,50 +132,38 @@ function type() {
   if(typedIndex >= frases.length) typedIndex = 0;
   const frase = frases[typedIndex];
   if(charIndex < frase.length){
-    typedText.textContent += frase.charAt(charIndex);
+    typedText.innerHTML += frase.charAt(charIndex);
     charIndex++;
     setTimeout(type, 100);
   } else {
-    setTimeout(() => {
-      typedText.textContent = "";
-      charIndex = 0;
-      typedIndex++;
-      type();
-    }, 4000);
+    typedText.innerHTML += "<br>"; // nova linha
+    charIndex = 0;
+    typedIndex++;
+    setTimeout(type, 1000);
   }
 }
 window.addEventListener('load', type);
 </script>
 
-<!-- Script chuva de corações -->
+<!-- Script chuva de corações em toda a página -->
 <script>
 function criarCoracao() {
   const heart = document.createElement('div');
   heart.classList.add('heart');
   heart.innerHTML = "❤️";
-
-  // posição horizontal aleatória
   heart.style.left = Math.random() * 100 + "vw";
-
-  // tamanho aleatório
   heart.style.fontSize = Math.random() * 30 + 15 + "px";
-
-  // duração aleatória do movimento
   heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
 
-  // posição inicial Y aleatória, em toda a altura da página
+  // posição inicial Y aleatória ao longo de toda a página
   const pageHeight = document.body.scrollHeight;
   heart.style.top = Math.random() * pageHeight + "px";
 
   document.body.appendChild(heart);
-
-  setTimeout(() => heart.remove(), 10000); // remove após animar
+  setTimeout(() => heart.remove(), 10000);
 }
-
-// cria corações a cada 300ms
 setInterval(criarCoracao, 300);
 </script>
-
 
 <!-- Script botão tocar música YouTube -->
 <script src="https://www.youtube.com/iframe_api"></script>
