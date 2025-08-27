@@ -9,10 +9,9 @@
   body {
     margin: 0;
     padding: 0;
-    background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
     font-family: 'Helvetica', sans-serif;
-    overflow: hidden;
-    position: relative;
+    background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
+    overflow-x: hidden;
   }
 
   /* Corações voando */
@@ -28,62 +27,60 @@
     100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
   }
 
-  /* Corações fixos no fundo */
-  .fixed-heart {
+  /* Corações seguindo cursor */
+  .cursor-heart {
     position: absolute;
-    color: rgba(255,0,100,0.1);
-    font-size: 50px;
-    top: 0;
-    left: 0;
-    animation: sway 6s ease-in-out infinite alternate;
+    color: rgba(255,0,100,0.7);
+    font-size: 20px;
     pointer-events: none;
-  }
-  @keyframes sway {
-    0% { transform: translateY(0) rotate(0deg);}
-    50% { transform: translateY(10px) rotate(10deg);}
-    100% { transform: translateY(0) rotate(0deg);}
+    animation: floatUp 4s linear forwards;
   }
 
-  /* Carrossel de fotos */
-  .carousel {
-    position: relative;
-    width: 90%;
-    max-width: 400px;
-    margin: 2rem auto;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 0 25px rgba(0,0,0,0.3);
-    z-index: 10;
-  }
-  .carousel img {
-    width: 100%;
-    position: absolute;
-    top: 0; left: 0;
-    opacity: 0;
-    transition: opacity 1.5s ease-in-out;
-    border-radius: 20px;
-  }
-  .carousel img.active {
-    opacity: 1;
-    position: relative;
-  }
-
-  /* Mensagens */
+  /* Mensagem com efeito digitando */
   .message-box {
     background: rgba(255,255,255,0.95);
     border-radius: 2rem;
     padding: 2rem;
-    max-width: 500px;
+    max-width: 600px;
+    margin: 2rem auto;
     box-shadow: 0 5px 30px rgba(0,0,0,0.3);
     text-align: center;
-    z-index: 10;
     position: relative;
-    margin-top: 1rem;
-    transition: all 0.5s ease;
+    z-index: 10;
   }
 
   .message-box h1 { color: #ff4081; font-weight: bold; font-size: 2rem; margin-bottom: 1rem; }
-  .message-box p { color: #333; font-size: 1.1rem; opacity: 1; transition: opacity 0.5s ease-in-out; }
+
+  /* Fade-in das fotos */
+  .foto {
+    width: 90%;
+    max-width: 600px;
+    display: block;
+    margin: 2rem auto;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+    border-radius: 20px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+  }
+  .foto.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Botão iniciar música */
+  .play-button {
+    background: #ff4081;
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .play-button:hover { background: #ff1c63; }
+
 </style>
 </head>
 <body>
@@ -94,102 +91,100 @@
   Seu navegador não suporta áudio.
 </audio>
 
-<!-- Corações fixos no fundo -->
-<script>
-  for(let i=0;i<20;i++){
-    const fh = document.createElement("div");
-    fh.classList.add("fixed-heart");
-    fh.innerHTML="❤️";
-    fh.style.top=Math.random()*100+"vh";
-    fh.style.left=Math.random()*100+"vw";
-    fh.style.fontSize=(Math.random()*40+30)+"px";
-    document.body.appendChild(fh);
-  }
-</script>
-
-<!-- Mensagem central -->
+<!-- Mensagem com efeito digitando -->
 <div class="message-box">
   <h1>Oi, meu amor ❤️</h1>
-  <p id="mensagem">Quero te lembrar o quanto você é especial para mim.</p>
+  <p id="typed-text"></p>
+  <button id="playButton" class="play-button">Clique aqui para ouvir a música 🎵</button>
 </div>
 
-<!-- Carrossel de fotos -->
-<div class="carousel">
-  <img src="foto1.jpg" class="active">
-  <img src="foto2.jpg">
-  <img src="foto3.jpg">
-  <!-- adicione mais fotos -->
-</div>
+<!-- Fotos da página -->
+<img src="foto1.jpg" class="foto">
+<img src="foto2.jpg" class="foto">
+<img src="foto3.jpg" class="foto">
+<!-- adicione mais fotos -->
 
-<!-- Script corações -->
+<!-- Script corações voando -->
 <script>
-  function criarCoracao() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 25 + 15 + "px";
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),8000);
-  }
-  setInterval(criarCoracao, 300);
+function criarCoracao() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerHTML = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = Math.random()*25 + 15 + "px";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),8000);
+}
+setInterval(criarCoracao, 400);
 
-  document.addEventListener("mousemove", e => {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML="❤️";
-    heart.style.left=e.clientX+"px";
-    heart.style.top=e.clientY+"px";
-    heart.style.fontSize=Math.random()*20+10+"px";
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),3000);
-  });
+// Corações seguindo o cursor
+document.addEventListener("mousemove", e => {
+  const c = document.createElement("div");
+  c.classList.add("cursor-heart");
+  c.innerHTML="❤️";
+  c.style.left=e.clientX+"px";
+  c.style.top=e.clientY+"px";
+  c.style.fontSize=Math.random()*20+10+"px";
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),4000);
+});
 </script>
 
-<!-- Script carrossel -->
+<!-- Script fade-in das fotos ao rolar -->
 <script>
-  const imagens = document.querySelectorAll(".carousel img");
-  let index = 0;
-  setInterval(() => {
-    imagens[index].classList.remove("active");
-    index = (index+1) % imagens.length;
-    imagens[index].classList.add("active");
-  }, 3500);
-</script>
-
-<!-- Script mensagens dinamicas -->
-<script>
-  const frases = [
-    "Você é o melhor presente da minha vida 💖",
-    "Eu te amo mais do que palavras podem dizer 🌹",
-    "Obrigado por existir e ser minha luz ✨",
-    "Cada momento com você é mágico 💕"
-  ];
-  let msgIndex=0;
-  setInterval(()=>{
-    const mensagem=document.getElementById("mensagem");
-    mensagem.style.opacity=0;
-    setTimeout(()=>{
-      mensagem.textContent=frases[msgIndex];
-      mensagem.style.opacity=1;
-      msgIndex=(msgIndex+1)%frases.length;
-    },500);
-  },5000);
-</script>
-
-<!-- Script autoplay reforçado -->
-<script>
-  window.addEventListener('load', ()=>{
-    const musica=document.getElementById('musica');
-    const playPromise = musica.play();
-    if(playPromise !== undefined){
-      playPromise.then(_=>{
-        console.log("Musica tocando");
-      }).catch(error=>{
-        console.log("Autoplay bloqueado, interaja na página");
-      });
+const fotos = document.querySelectorAll('.foto');
+function checkFotos() {
+  const triggerBottom = window.innerHeight * 0.85;
+  fotos.forEach(foto => {
+    const fotoTop = foto.getBoundingClientRect().top;
+    if(fotoTop < triggerBottom){
+      foto.classList.add('visible');
     }
   });
+}
+window.addEventListener('scroll', checkFotos);
+window.addEventListener('load', checkFotos);
+</script>
+
+<!-- Script efeito digitando -->
+<script>
+const frases = [
+  "Você é o melhor presente da minha vida 💖",
+  "Eu te amo mais do que palavras podem dizer 🌹",
+  "Obrigado por existir e ser minha luz ✨",
+  "Cada momento com você é mágico 💕"
+];
+let typedIndex = 0;
+let charIndex = 0;
+const typedText = document.getElementById("typed-text");
+
+function type() {
+  if(typedIndex >= frases.length) typedIndex = 0;
+  const frase = frases[typedIndex];
+  if(charIndex < frase.length){
+    typedText.textContent += frase.charAt(charIndex);
+    charIndex++;
+    setTimeout(type, 100);
+  } else {
+    setTimeout(() => {
+      typedText.textContent = "";
+      charIndex = 0;
+      typedIndex++;
+      type();
+    }, 4000);
+  }
+}
+window.addEventListener('load', type);
+</script>
+
+<!-- Botão iniciar música -->
+<script>
+const playButton = document.getElementById('playButton');
+const musica = document.getElementById('musica');
+playButton.addEventListener('click', () => {
+  musica.play();
+  playButton.style.display = 'none';
+});
 </script>
 
 </body>
